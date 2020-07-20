@@ -1,4 +1,5 @@
 import 'package:chat_app/services/authentication.dart';
+import 'package:chat_app/services/helperfunctions.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -22,8 +23,13 @@ class _RegisterPageState extends State<RegisterPage> {
         isLoading = true;
       });
       Auth()
-          .registerNewUser(emailController.text, passwordController.text, usernameController.text)
+          .registerNewUser(emailController.text, passwordController.text,
+              usernameController.text)
           .then((value) => print(value));
+          //setting username and email + setting them as loggedIn
+      HelperFunction.saveUserEmailSharedPrefences(usernameController.text);
+      HelperFunction.saveUserNamePrefence(usernameController.text);
+      HelperFunction.saveuserLoggedInStatus(true);
       Navigator.of(context).pushReplacementNamed('/dashboard');
     }
   }

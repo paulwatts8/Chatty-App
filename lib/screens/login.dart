@@ -1,4 +1,7 @@
 import 'package:chat_app/services/authentication.dart';
+import 'package:chat_app/services/database.dart';
+import 'package:chat_app/services/helperfunctions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,17 +15,28 @@ class _LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
   bool isLoading = false;
 
+  QuerySnapshot usernameSnapshot;
+
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
 
   signIn() {
     if (_formkey.currentState.validate()) {
+      HelperFunction.saveUserEmailSharedPrefences(emailController.text);
       setState(() {
         isLoading = true;
       });
+      DB().getUserName(emailController.text).then((value) {
+        value = usernameSnapshot;
+        HelperFunction.saveUserNamePrefence(
+            usernameSnapshot.documents[0].data['username']);
+      });
       Auth()
           .signwithEmailandPass(emailController.text, passwordController.text)
-          .then((value) => print(value));
+          .then((value) {
+        if (value != null) {}
+        print(value);
+      });
       Navigator.pushReplacementNamed(context, '/dashboard');
     }
   }
@@ -80,7 +94,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(height: 20),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            signIn();
+                          },
                           child: Container(
                             alignment: Alignment.center,
                             width: MediaQuery.of(context).size.width,

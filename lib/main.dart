@@ -1,4 +1,3 @@
-import 'package:chat_app/screens/chatpage.dart';
 import 'package:chat_app/screens/dashboard.dart';
 import 'package:chat_app/screens/login.dart';
 import 'package:chat_app/screens/register.dart';
@@ -24,7 +23,6 @@ class MyApp extends StatelessWidget {
         routes: <String, WidgetBuilder>{
           '/register': (BuildContext context) => new RegisterPage(),
           '/dashboard': (BuildContext context) => new Dashboard(),
-          '/chatpage': (BuildContext context) => new ChatPage(),
           '/login': (BuildContext context) => new LoginPage(),
           '/search': (BuildContext context) => new Search(),
         });

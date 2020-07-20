@@ -1,3 +1,5 @@
+import 'package:chat_app/modules/constants.dart';
+import 'package:chat_app/screens/conversationpage.dart.dart';
 import 'package:chat_app/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,21 +17,33 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
-    initiateSearch();
     super.initState();
   }
 
   initiateSearch() {
-    DB().getUsers(usernameController.text).then((value) {
+    DB().getUser(usernameController.text).then((value) {
       setState(() {
         searchSnapshot = value;
       });
+    }).catchError((e) {
+      print('error getting user' + e.toString());
     });
   }
 
   //sends user to chatscreen for selected user
-  createNewonversation(){
+  createNewConversation(String userName) {
+    String chatRoomId = getChatRoomId(userName, Constants.myName);
 
+    List<String> users = [userName, Constants.myName];
+    Map<String, dynamic> chatRoomMap = {
+      'users': users,
+      'chatRoomID': chatRoomId,
+    };
+    DB().createChatRoom(chatRoomId, chatRoomMap);
+    Navigator.of(context).pop();
+    Navigator.pushReplacement(context, MaterialPageRoute(
+      builder: (context) => ConversationPage(chatRoomId),
+    ));
   }
 
   Widget searchlist() {
@@ -37,12 +51,53 @@ class _SearchState extends State<Search> {
         ? ListView.builder(
             shrinkWrap: true,
             itemCount: searchSnapshot.documents.length,
-            itemBuilder: (BuildContext context, int index) {
-              return SearchTile(
-                  username: searchSnapshot.documents[index].data['username']);
+            itemBuilder: (context, index) {
+              return searchTile(
+                  searchSnapshot.documents[index].data['username']);
             },
           )
-        : Container(child: Center(child: Text('no search data')),);
+        : Container(
+            color: Colors.red,
+            child: Center(child: Text('no search data')),
+          );
+  }
+
+//list tile which displays all users
+  Widget searchTile(String userName) {
+    return GestureDetector(
+      onTap: () {
+        createNewConversation(userName);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 15),
+        child: Row(
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  userName,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+            Spacer(),
+            Container(
+              height: 35,
+              width: 35,
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(80),
+              ),
+              child: Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -79,43 +134,16 @@ class _SearchState extends State<Search> {
                 )
               ],
             )),
-            Expanded(child: searchlist())
-
+        searchlist()
       ])),
     );
   }
 }
 
-class SearchTile extends StatelessWidget {
-  final String username;
-  SearchTile({this.username});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      child: Row(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                username,
-              )
-            ],
-          ),
-          Spacer(),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.green, borderRadius: BorderRadius.circular(13)),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: IconButton(icon: Icon(Icons.send), onPressed: null),
-            ),
-          )
-        ],
-      ),
-    );
+getChatRoomId(String a, String b) {
+  if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+    return "$b\_$a";
+  } else {
+    return "$a\_$b";
   }
 }
