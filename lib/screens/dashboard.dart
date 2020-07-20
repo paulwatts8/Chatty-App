@@ -31,9 +31,9 @@ class _DashboardState extends State<Dashboard> {
                                 builder: (context) => ConversationPage(snapshot
                                     .data.documents.data['chatRoomID'])));
                       },
-                      trailing: CircleAvatar(
+                      leading:  CircleAvatar(
                         backgroundColor: Colors.green,
-                        // child: Text('${username.substring(0,1).toUpperCase()}'),
+                        child: Text(snapshot.data.documents[index].data['chatRoomID'].substring(0,1).toUpperCase().toString()),
                       ),
                       title: Text(snapshot
                           .data.documents[index].data['chatRoomID']
@@ -55,7 +55,9 @@ class _DashboardState extends State<Dashboard> {
   getUserInfo() async {
     Constants.myName = await HelperFunction.getUserNamePrefence();
 
-    DB().getUserChats(Constants.myName).then((value) => chatRoomStream);
+    DB().getUserChats(Constants.myName).then((value) {
+      chatRoomStream = value;
+    });
     setState(() {});
   }
 
