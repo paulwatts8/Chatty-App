@@ -41,8 +41,8 @@ class _SearchState extends State<Search> {
     };
     DB().createChatRoom(chatRoomId, chatRoomMap);
     Navigator.of(context).pop();
-    Navigator.pushReplacement(context, MaterialPageRoute(
-      builder: (context) => ConversationPage(chatRoomId),
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => ConversationPage(chatRoomId,userName),
     ));
   }
 

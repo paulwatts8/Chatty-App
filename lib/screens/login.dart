@@ -1,3 +1,4 @@
+import 'package:chat_app/screen/chatpage.dart';
 import 'package:chat_app/services/authentication.dart';
 import 'package:chat_app/services/database.dart';
 import 'package:chat_app/services/helperfunctions.dart';
@@ -20,24 +21,53 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
 
-  signIn() {
+  // signIn() async {
+  //   if (_formkey.currentState.validate()) {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     await DB().getUserName(emailController.text).then((value) {
+  //       value = usernameSnapshot;
+  //       HelperFunction.saveuserLoggedInStatus(true);
+  //       HelperFunction.saveUserNamePrefence(
+  //           usernameSnapshot.documents[0].data['username']);
+  //       HelperFunction.saveUserEmailSharedPrefences(emailController.text);
+  //     });
+  //     Auth()
+  //         .signwithEmailandPass(emailController.text, passwordController.text)
+  //         .then((value) {
+  //       if (value != null) {}
+  //       Navigator.pushReplacementNamed(context, '/dashboard');
+  //     });
+  //   }
+  // }
+
+  signIn() async {
     if (_formkey.currentState.validate()) {
-      HelperFunction.saveUserEmailSharedPrefences(emailController.text);
       setState(() {
         isLoading = true;
       });
-      DB().getUserName(emailController.text).then((value) {
-        value = usernameSnapshot;
-        HelperFunction.saveUserNamePrefence(
-            usernameSnapshot.documents[0].data['username']);
-      });
-      Auth()
+
+      await Auth()
           .signwithEmailandPass(emailController.text, passwordController.text)
-          .then((value) {
-        if (value != null) {}
-        print(value);
+          .then((result) async {
+        if (result != null) {
+          QuerySnapshot userInfoSnapshot =
+              await DB().getUserName(emailController.text);
+          HelperFunction.saveuserLoggedInStatus(true);
+          HelperFunction.saveUserNamePrefence(
+              userInfoSnapshot.documents[0].data["username"]);
+          HelperFunction.saveUserEmailSharedPrefences(
+              userInfoSnapshot.documents[0].data["email"]);
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => ChatPage()));
+        } else {
+          setState(() {
+            isLoading = false;
+            //show snackbar
+          });
+        }
       });
-      Navigator.pushReplacementNamed(context, '/dashboard');
     }
   }
 
@@ -59,8 +89,9 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: <Widget>[
                         TextFormField(
+                          controller: emailController,
                           validator: (value) {
-                            return value;
+                            return null;
                           },
                           decoration: InputDecoration(hintText: 'Email'),
                         ),

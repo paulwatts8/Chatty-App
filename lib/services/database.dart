@@ -41,12 +41,16 @@ class DB {
     });
   }
 
-//getting useers Chayts
- getUserChats(String itIsMyName) async {
+//getting users Chats
+  getUserChats(String itIsMyName) async {
     return fireChatRoom.where('users', arrayContains: itIsMyName).snapshots();
   }
 
-  getConversationMessage(String chatRoomId) async{
-    return  fireChatRoom.document(chatRoomId).collection('chats').orderBy('time').snapshots();
+  getConversationMessage(String chatRoomId) async {
+    return fireChatRoom
+        .document(chatRoomId)
+        .collection('chats')
+        .orderBy('time')
+        .snapshots();
   }
 }

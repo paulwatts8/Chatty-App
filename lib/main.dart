@@ -4,6 +4,7 @@ import 'package:chat_app/screens/register.dart';
 import 'package:chat_app/screens/search.dart';
 import 'package:chat_app/services/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,8 +17,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+          textTheme: GoogleFonts.nunitoSansTextTheme(
+            Theme.of(context).textTheme,
+          ),
+          primaryColor: Color(0xff5B428F),
+          accentColor: Color(0xffF56D58),
+          primaryColorDark: Color(0xff262833),
+          primaryColorLight: Color(0xffFCF9F5),
+        ),
+        darkTheme: ThemeData(
+          textTheme: GoogleFonts.nunitoSansTextTheme(
+            Theme.of(context).textTheme,
+          ),
+          primaryColor: Color(0xff5B428F),
+          accentColor: Color(0xffF56D58),
+          primaryColorDark: Color(0xffFFFFFF),
+          primaryColorLight: Color(0xff000000),
         ),
         home: Auth().handleAuth(),
         routes: <String, WidgetBuilder>{
