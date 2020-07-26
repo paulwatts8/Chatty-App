@@ -1,4 +1,5 @@
 import 'package:chat_app/modules/constants.dart';
+import 'package:chat_app/screens/aboutpage.dart';
 import 'package:chat_app/screens/conversationpage.dart.dart';
 import 'package:chat_app/services/authentication.dart';
 import 'package:chat_app/services/database.dart';
@@ -79,37 +80,35 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       body: FlatPageWrapper(
         scrollType: ScrollType.floatingHeader,
-        header: FlatPageHeader(
-          prefixWidget: FlatProfileImage(
-            onPressed: () {
-              new Drawer(
-                child: ListView(
-                  children: <Widget>[
-                    new UserAccountsDrawerHeader(
-                      accountName: new Text('Ben'),
-                      accountEmail: null,
-                      currentAccountPicture: new FlatProfileImage(
-                        imageUrl:
-                            "https://images.unsplash.com/photo-1573488693582-260a6f1a51c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1356&q=80",
-                      ),
-                    )
-                  ],
+        header: GestureDetector(
+          onLongPress: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Aboutpage()));
+          },
+          child: FlatPageHeader(
+            prefixWidget: FlatProfileImage(
+              size: 37,
+              imageUrl:
+                  "https://images.unsplash.com/photo-1573488693582-260a6f1a51c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1356&q=80",
+            ),
+            title: "Chatty",
+            suffixWidget: Row(
+              children: <Widget>[
+                FlatActionButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/search');
+                  },
+                  iconData: Icons.search,
                 ),
-              );
-              // Auth()
-              //     .sigOut()
-              //     .then((value) => {Navigator.pushNamed(context, '/login')});
-            },
-            size: 37,
-            imageUrl:
-                "https://images.unsplash.com/photo-1573488693582-260a6f1a51c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1356&q=80",
-          ),
-          title: "Chatty",
-          suffixWidget: FlatActionButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/search');
-            },
-            iconData: Icons.search,
+                FlatActionButton(
+                  onPressed: () {
+                    Auth().sigOut().then(
+                        (value) => {Navigator.pushNamed(context, '/login')});
+                  },
+                  iconData: Icons.exit_to_app,
+                ),
+              ],
+            ),
           ),
         ),
         children: [

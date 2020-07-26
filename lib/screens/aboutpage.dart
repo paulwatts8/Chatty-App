@@ -1,4 +1,3 @@
-import 'package:chat_app/screen/homepage.dart';
 import 'package:chat_app/widgets/flat_widgets/flat_info_page_wrapper.dart';
 import 'package:chat_app/widgets/flat_widgets/flat_primary_button.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class _AboutpageState extends State<Aboutpage> {
         body: Container(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            'Flat Chat App created by Paul Watts. \n Credits to TVAC for the Flat Theme Widgets',
             style: TextStyle(
               fontSize: 14.0,
               color: Theme.of(context).primaryColorDark.withOpacity(0.54),
@@ -34,7 +33,7 @@ class _AboutpageState extends State<Aboutpage> {
           ),
           child: FlatPrimaryButton(
             onPressed: () {
-              Navigator.pushNamed(context, Homepage.id);
+              Navigator.pop(context);
             },
             prefixIcon: Icons.arrow_back,
             textAlign: TextAlign.right,
