@@ -1,5 +1,4 @@
 
-import 'package:chat_app/screen/chatpage.dart';
 import 'package:chat_app/widgets/flat_widgets/flat_add_story_btn.dart';
 import 'package:chat_app/widgets/flat_widgets/flat_chat_item.dart';
 import 'package:chat_app/widgets/flat_widgets/flat_counter.dart';
@@ -89,7 +88,7 @@ class _AppPageState extends State<AppPage> {
               message: "Something new here, wasup chan",
               multiLineMessage: true,
               onPressed: () {
-                Navigator.pushNamed(context, ChatPage.id);
+                // Navigator.pushNamed(context, ChatPage.id);
               },
             ),
             FlatSectionHeader(

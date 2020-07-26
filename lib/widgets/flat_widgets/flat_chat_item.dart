@@ -2,7 +2,6 @@ import 'package:chat_app/widgets/flat_widgets/flat_profile_image.dart';
 import 'package:flutter/material.dart';
 
 class FlatChatItem extends StatelessWidget {
-
   final Widget profileImage;
   final String name;
   final String message;
@@ -39,7 +38,9 @@ class FlatChatItem extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: multiLineMessage == true ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+            crossAxisAlignment: multiLineMessage == true
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.center,
             children: [
               profileImage ?? FlatProfileImage(),
               Expanded(
@@ -63,7 +64,8 @@ class FlatChatItem extends StatelessWidget {
                               name ?? "Name",
                               style: TextStyle(
                                 fontSize: 16.0,
-                                color: nameColor ?? Theme.of(context).primaryColorDark,
+                                color: nameColor ??
+                                    Theme.of(context).primaryColorDark,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -78,7 +80,10 @@ class FlatChatItem extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.w600,
-                                color: messageColor ?? Theme.of(context).primaryColorDark.withOpacity(0.5),
+                                color: messageColor ??
+                                    Theme.of(context)
+                                        .primaryColorDark
+                                        .withOpacity(0.5),
                               ),
                             ),
                           ),

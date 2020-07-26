@@ -2,7 +2,6 @@ import 'package:chat_app/modules/user.dart';
 import 'package:chat_app/screens/dashboard.dart';
 import 'package:chat_app/screens/login.dart';
 import 'package:chat_app/services/database.dart';
-import 'package:chat_app/services/helperfunctions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -26,15 +25,14 @@ class Auth {
   }
 
 //signing in user with firebase
-  Future signwithEmailandPass(String email, String pass) async {
+  signwithEmailandPass(String email, String pass) async {
     try {
       AuthResult result =
           await _auth.signInWithEmailAndPassword(email: email, password: pass);
       FirebaseUser fireUser = result.user;
-      HelperFunction.saveuserLoggedInStatus(true);
       return _firebaseUser(fireUser);
     } catch (e) {
-      print(e);
+      print('error signing in' + e.toString());
     }
   }
 

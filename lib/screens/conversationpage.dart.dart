@@ -20,12 +20,13 @@ class _ConversationPageState extends State<ConversationPage> {
   Stream<QuerySnapshot> conversationMessageStream;
   TextEditingController messageController = new TextEditingController();
 
-  chatMessageList() {
+  Widget chatMessageList() {
     return StreamBuilder(
         stream: conversationMessageStream,
         builder: (context, snapshot) {
           return snapshot.hasData
               ? ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
@@ -81,9 +82,8 @@ class _ConversationPageState extends State<ConversationPage> {
           title: widget.userChatName,
           suffixWidget: FlatProfileImage(
             size: 35.0,
-            onlineIndicator: true,
-            imageUrl:
-                "https://images.unsplash.com/photo-1573488693582-260a6f1a51c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1356&q=80",
+            onlineIndicator: false,
+            imageUrl: null,
             onPressed: () {
               print("Clicked Profile Image");
             },
@@ -91,14 +91,11 @@ class _ConversationPageState extends State<ConversationPage> {
         ),
         children: [chatMessageList()],
         footer: FlatMessageInputBox(
-          onPressed: sendMessage(),
+          onPressed: () {
+            sendMessage();
+          },
           onChanged: messageController,
           roundedCorners: true,
-          suffix: FlatActionButton(
-            iconData: Icons.image,
-            onPressed: sendMessage(),
-            iconSize: 24.0,
-          ),
         ),
       ),
     );

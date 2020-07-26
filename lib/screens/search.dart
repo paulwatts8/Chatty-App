@@ -1,6 +1,13 @@
 import 'package:chat_app/modules/constants.dart';
 import 'package:chat_app/screens/conversationpage.dart.dart';
 import 'package:chat_app/services/database.dart';
+import 'package:chat_app/widgets/flat_widgets/flat_action_btn.dart';
+import 'package:chat_app/widgets/flat_widgets/flat_chat_item.dart';
+import 'package:chat_app/widgets/flat_widgets/flat_input_box.dart';
+import 'package:chat_app/widgets/flat_widgets/flat_page_header.dart';
+import 'package:chat_app/widgets/flat_widgets/flat_page_wrapper.dart';
+import 'package:chat_app/widgets/flat_widgets/flat_profile_image.dart';
+import 'package:chat_app/widgets/flat_widgets/flat_section_header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -41,9 +48,11 @@ class _SearchState extends State<Search> {
     };
     DB().createChatRoom(chatRoomId, chatRoomMap);
     Navigator.of(context).pop();
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => ConversationPage(chatRoomId,userName),
-    ));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ConversationPage(chatRoomId, userName),
+        ));
   }
 
   Widget searchlist() {
@@ -56,94 +65,83 @@ class _SearchState extends State<Search> {
                   searchSnapshot.documents[index].data['username']);
             },
           )
-        : Container(
-            color: Colors.red,
-            child: Center(child: Text('no search data')),
-          );
+        : Container();
   }
 
 //list tile which displays all users
   Widget searchTile(String userName) {
-    return GestureDetector(
-      onTap: () {
-        createNewConversation(userName);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 15),
-        child: Row(
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  userName,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-            Spacer(),
-            Container(
-              height: 35,
-              width: 35,
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(80),
-              ),
-              child: Icon(
-                Icons.send,
-                color: Colors.white,
-              ),
-            )
-          ],
-        ),
-      ),
+    return FlatChatItem(
+      message: '',
+      profileImage: FlatProfileImage(
+          onPressed: () {
+            createNewConversation(userName);
+          },
+          onlineIndicator: false,
+          imageUrl: null),
+      name: userName,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Container(
-          child: Column(children: <Widget>[
-        Container(
-            color: Colors.grey[350],
-            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                    child: TextFormField(
-                  controller: usernameController,
-                  validator: (val) {
-                    return val.length < 2 ? 'Input a username' : null;
+        body: FlatPageWrapper(
+      scrollType: ScrollType.floatingHeader,
+      header: FlatPageHeader(
+        prefixWidget: FlatActionButton(
+          iconData: Icons.arrow_back_ios,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: "Search",
+        suffixWidget: FlatActionButton(
+          iconData: Icons.contacts,
+          iconColor: Colors.white,
+        ),
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: FlatInputBox(
+                  onChanged: usernameController,
+                  obsecureText: false,
+                  validator: (value) {
+                    return null;
                   },
-                  decoration: InputDecoration(hintText: 'search Username'),
-                )),
-                GestureDetector(
-                  onTap: () {
-                    initiateSearch();
-                  },
-                  child: Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40),
-                          gradient: LinearGradient(
-                              colors: [Colors.grey[400], Colors.grey])),
-                      child: Icon(Icons.search)),
-                )
-              ],
-            )),
-        searchlist()
-      ])),
-    );
+                  roundedCorners: true,
+                  hintText: 'Search Username....',
+                ),
+              ),
+              FlatActionButton(
+                iconData: Icons.search,
+                iconSize: 35.0,
+                iconColor: Colors.black,
+                onPressed: () {
+                  initiateSearch();
+                },
+              ),
+            ],
+          ),
+        ),
+        FlatSectionHeader(
+          title: "Search Results",
+        ),
+        searchlist(),
+      ],
+    ));
   }
-}
 
-getChatRoomId(String a, String b) {
-  if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
-    return "$b\_$a";
-  } else {
-    return "$a\_$b";
+  getChatRoomId(String a, String b) {
+    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+      return "$b\_$a";
+    } else {
+      return "$a\_$b";
+    }
   }
 }
